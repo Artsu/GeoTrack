@@ -1,6 +1,6 @@
-package com.example.geotrack;
+package fi.jyu.ties425.geotrack;
 
-import java.util.logging.Logger;
+import com.example.geotrack.R;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -58,9 +57,11 @@ public class MainActivity extends Activity {
         AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
          
         // set the message to display
-        alertbox.setMessage("Created by:\n" +
+        alertbox.setMessage(
+        		"Created by:\n" +
         		"Ari-Matti Nivasalo,\n" +
-        		"Kim Foudila");
+        		"Kim Foudila"
+        		);
          
         // add a neutral button to the alert box and assign a click listener
         alertbox.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
