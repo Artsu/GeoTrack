@@ -1,0 +1,65 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="29dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="@string/welcome_text"
+        tools:context=".MainActivity" />
+
+    <Button
+        android:id="@+id/startStopButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="29dp"
+        android:text="@string/start_button_displaytext" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/startStopButton"
+        android:layout_alignRight="@+id/startStopButton"
+        android:layout_below="@+id/startStopButton"
+        android:layout_marginTop="40dp"
+        android:text="@string/list_button_displaytext" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/button2"
+        android:layout_alignRight="@+id/button2"
+        android:layout_below="@+id/button2"
+        android:layout_marginTop="10dp"
+        android:text="@string/map_button_displaytext" />
+
+    <ImageButton
+        android:id="@+id/infoImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/textView1"
+        android:layout_marginBottom="10dp"
+        android:contentDescription="@string/show_infotext"
+        android:src="@android:drawable/ic_dialog_info"
+        android:onClick="showInfoDialog"/>
+
+<!--     <ImageButton -->
+<!--         android:id="@+id/imageButton1" -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_alignBottom="@+id/imageView1" -->
+<!--         android:layout_toRightOf="@+id/button3" -->
+<!--         android:src="@android:drawable/ic_dialog_info" /> -->
+
+</RelativeLayout>
