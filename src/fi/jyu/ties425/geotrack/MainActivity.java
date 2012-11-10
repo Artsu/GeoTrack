@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -52,6 +53,19 @@ public class MainActivity extends Activity {
        }
     }
     
+    /**
+     * 
+     * @param view
+     */
+    public void openMapActivity(View view) {
+    	Intent i = new Intent(this, PointsInMapActivity.class);
+    	startActivityForResult(i, 0);
+    }
+    
+    /**
+     * 
+     * @param view
+     */
     public void showInfoDialog(View view) {
     	// prepare the alert box                   
         AlertDialog.Builder alertbox = new AlertDialog.Builder(this);

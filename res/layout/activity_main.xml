@@ -34,14 +34,15 @@
         android:text="@string/list_button_displaytext" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/mapButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/button2"
         android:layout_alignRight="@+id/button2"
         android:layout_below="@+id/button2"
         android:layout_marginTop="10dp"
-        android:text="@string/map_button_displaytext" />
+        android:text="@string/map_button_displaytext" 
+        android:onClick="openMapActivity"/>
 
     <ImageButton
         android:id="@+id/infoImageButton"
