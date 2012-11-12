@@ -17,9 +17,10 @@ public class MainActivity extends Activity {
 
 	private static final String TAG = "MainActivity";
 	
+	private boolean trackingIsOn = false;
+	
 	private Button startStopButton;
 	private ImageButton infoImageButton;
-	
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,37 +46,65 @@ public class MainActivity extends Activity {
         return true;
     }
     
+    /**
+     * This didn't seem to work even though it was in some tutorial
+     * @param view
+     */
     public void onClick(View view) {
     	Log.e(TAG, "asdasd" + view.getId());
     	switch (view.getId()) {
-        case R.id.infoImageButton:
-
-       }
+        	case R.id.infoImageButton:
+        }
     }
     
     /**
-     * 
+     * Opens map activity view
      * @param view
      */
     public void openMapActivity(View view) {
-    	Intent i = new Intent(this, PointsInMapActivity.class);
-    	startActivityForResult(i, 0);
+    	if (trackingIsOn) {
+    		showDialog("Stop the tracking first to view your route.");
+    	} else {
+	    	Intent i = new Intent(this, PointsInMapActivity.class);
+	    	startActivityForResult(i, 0); //FIXME: mitä tulee requestCodeksi?
+    	}
     }
     
     /**
-     * 
+     * Opens list activity view
+     * @param view
+     */
+    public void openListActivity(View view) {    	
+    	if (trackingIsOn) {
+    		showDialog("Stop the tracking first to view your route.");
+    	} else {
+        	Intent i = new Intent(this, ListActivity.class);
+        	
+//            i.putExtra("Value1", "This value one for ActivityTwo ");
+//            i.putExtra("Value2", "This value two ActivityTwo");
+            
+            startActivityForResult(i, 0); //FIXME: mitä tulee requestCodeksi?
+    	}
+
+    }
+    
+    /**
+     * Shows info dialog box
      * @param view
      */
     public void showInfoDialog(View view) {
-    	// prepare the alert box                   
+    	showDialog(
+    			"Created by:\n" +
+        		"Ari-Matti Nivasalo,\n" +
+        		"Kim Foudila");
+    }
+
+	private void showDialog(String dialogText) {
+		// prepare the alert box                   
         AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
          
         // set the message to display
-        alertbox.setMessage(
-        		"Created by:\n" +
-        		"Ari-Matti Nivasalo,\n" +
-        		"Kim Foudila"
-        		);
+        alertbox.setMessage(dialogText);
          
         // add a neutral button to the alert box and assign a click listener
         alertbox.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
@@ -87,5 +116,5 @@ public class MainActivity extends Activity {
          
         // show it
         alertbox.show();
-    }
+	}
 }

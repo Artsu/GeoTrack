@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+     <ImageView android:id="@+id/imgIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp" 
+        android:contentDescription="@string/show_infotext"        
+        /><!-- android:src="@android:drawable/ic_launcher" -->
+        
+     	<TextView android:id="@+id/tagLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imgIcon"
+        android:layout_toRightOf="@+id/imgIcon"
+        android:textStyle="bold"
+        android:textSize="14dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp" 
+        android:text="@string/start_button_displaytext" />
+     
+        <TextView android:id="@+id/tagTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tagLocation"
+        android:layout_alignRight="@+id/tagLocation"
+        android:layout_below="@+id/tagLocation"
+        android:textStyle="bold"
+        android:textSize="14dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="5dp" 
+        android:text="@string/start_button_displaytext" />
+        
+</RelativeLayout>

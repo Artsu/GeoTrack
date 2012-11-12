@@ -32,6 +32,11 @@
 			android:theme="@android:style/Theme.NoTitleBar">
 		</activity>
 		
+        <activity android:name="fi.jyu.ties425.geotrack.ListActivity"
+			android:label="@string/list_activity_name"
+			android:theme="@android:style/Theme.NoTitleBar">
+		</activity>
+		
     </application>
 
 </manifest>

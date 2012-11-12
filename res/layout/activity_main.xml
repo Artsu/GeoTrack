@@ -31,7 +31,8 @@
         android:layout_alignRight="@+id/startStopButton"
         android:layout_below="@+id/startStopButton"
         android:layout_marginTop="40dp"
-        android:text="@string/list_button_displaytext" />
+        android:text="@string/list_button_displaytext" 
+        android:onClick="openListActivity"/>
 
     <Button
         android:id="@+id/mapButton"

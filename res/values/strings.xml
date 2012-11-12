@@ -1,7 +1,7 @@
 <resources>
-
     <string name="app_name">GeoTrack</string>
     <string name="map_activity_name">Maps Activity</string>
+    <string name="list_activity_name">Maps Activity</string>
     
     <string name="title_activity_main">MainActivity</string>
     <string name="menu_settings">Settings</string>
@@ -21,6 +21,4 @@
     
     <string name="list_button_displaytext">Show taglist</string>
     <string name="map_button_displaytext">Show map</string>
-    
-
 </resources>
