@@ -11,8 +11,9 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp" 
-        android:contentDescription="@string/show_infotext"        
-        /><!-- android:src="@android:drawable/ic_launcher" -->
+        android:contentDescription="@string/show_infotext"    
+        android:src="@drawable/ic_launcher"    
+        /><!--  -->
         
      	<TextView android:id="@+id/tagLocation"
         android:layout_width="wrap_content"

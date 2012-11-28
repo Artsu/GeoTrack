@@ -1,5 +1,10 @@
 package fi.jyu.ties425.geotrack;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.example.geotrack.R;
 
 import fi.jyu.ties425.geotrack.model.GeoTag;
@@ -22,6 +27,8 @@ public class MainActivity extends Activity {
 	private static final String TAG = "MainActivity";
 	
 	private boolean trackingIsOn = false;
+	
+	private List<GeoTag> tags = new ArrayList<GeoTag>();
 	
 	private Button startStopButton;
 	private ImageButton infoImageButton;
@@ -137,5 +144,13 @@ public class MainActivity extends Activity {
          
         // show it
         alertbox.show();
+	}
+
+	public GeoTag[] getTags() {
+		return tags.toArray(new GeoTag[0]);
+	}
+
+	public void setTags(List<GeoTag> tags) {
+		this.tags = tags;
 	}
 }
