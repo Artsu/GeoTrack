@@ -2,7 +2,11 @@ package fi.jyu.ties425.geotrack;
 
 import com.example.geotrack.R;
 
+import fi.jyu.ties425.geotrack.model.GeoTag;
+import fi.jyu.ties425.geotrack.util.CommonUtil;
+
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -65,8 +69,19 @@ public class MainActivity extends Activity {
     	if (trackingIsOn) {
     		showDialog("Stop the tracking first to view your route.");
     	} else {
-	    	Intent i = new Intent(this, PointsInMapActivity.class);
-	    	startActivityForResult(i, 0); //FIXME: mitä tulee requestCodeksi?
+	    	Intent intent = new Intent(this, PointsInMapActivity.class);
+	    	
+
+    		GeoTag data[] = new GeoTag[] {
+    				new GeoTag("asdf", "1"),
+    				new GeoTag("assdfsdfsdf", "2"),
+    				new GeoTag("asasddf", "3"),
+    				new GeoTag("das", "4"),
+    				new GeoTag("aasdsdf", "5") };
+    		Parcelable[] output = CommonUtil.parseGeoTagArrayToParcelableArray(data);
+    		
+    		intent.putExtra("data", output);
+	    	startActivityForResult(intent, 0); //FIXME: mitä tulee requestCodeksi?
     	}
     }
     
@@ -78,12 +93,18 @@ public class MainActivity extends Activity {
     	if (trackingIsOn) {
     		showDialog("Stop the tracking first to view your route.");
     	} else {
-        	Intent i = new Intent(this, ListActivity.class);
-        	
-//            i.putExtra("Value1", "This value one for ActivityTwo ");
-//            i.putExtra("Value2", "This value two ActivityTwo");
-            
-            startActivityForResult(i, 0); //FIXME: mitä tulee requestCodeksi?
+        	Intent intent = new Intent(this, ListActivity.class);
+
+    		GeoTag data[] = new GeoTag[] {
+    				new GeoTag("asdf", "1"),
+    				new GeoTag("assdfsdfsdf", "2"),
+    				new GeoTag("asasddf", "3"),
+    				new GeoTag("das", "4"),
+    				new GeoTag("aasdsdf", "5") };
+    		Parcelable[] output = CommonUtil.parseGeoTagArrayToParcelableArray(data);
+    		
+    		intent.putExtra("data", output);
+            startActivityForResult(intent, 0); //FIXME: mitä tulee requestCodeksi?
     	}
 
     }
