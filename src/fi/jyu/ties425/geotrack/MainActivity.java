@@ -4,10 +4,12 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import com.example.geotrack.R;
 
 import fi.jyu.ties425.geotrack.model.GeoTag;
+import fi.jyu.ties425.geotrack.tasks.LocationSelectionAsyncTask;
 import fi.jyu.ties425.geotrack.util.CommonUtil;
 
 import android.os.Bundle;
@@ -22,6 +24,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+/**
+ * The main activity for GeoTrack app. 
+ * GeoTrack tracks user\'s movement and shows his/her movement in handy ways. 
+ * 
+ * @author Ari-Matti Nivasalo, Kim Foudila
+ */
 public class MainActivity extends Activity {
 
 	private static final String TAG = "MainActivity";
@@ -29,6 +37,8 @@ public class MainActivity extends Activity {
 	private boolean trackingIsOn = false;
 	
 	private List<GeoTag> tags = new ArrayList<GeoTag>();
+	
+	private TrackerThread trackerThread;
 	
 	private Button startStopButton;
 	private ImageButton infoImageButton;
@@ -38,8 +48,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-//        final Button button = (Button) findViewById(R.id.startStopButton);
-//        this.startStopButton = button;
+        final Button button = (Button) findViewById(R.id.startStopButton);
+        this.startStopButton = button;
 //        
 //        final ImageButton imageButton = (ImageButton) findViewById(R.id.infoImageButton);
 //        this.infoImageButton = imageButton;
@@ -58,14 +68,23 @@ public class MainActivity extends Activity {
     }
     
     /**
-     * This didn't seem to work even though it was in some tutorial
+     * Starts or stops the tracking depending on whether the tracking is on
+     * 
      * @param view
      */
-    public void onClick(View view) {
-    	Log.e(TAG, "asdasd" + view.getId());
-    	switch (view.getId()) {
-        	case R.id.infoImageButton:
-        }
+    public void startOrStopTracking(View view) {
+    	if (trackingIsOn) {
+    		trackingIsOn = false;
+    		
+    		startStopButton.setText("Start tracking");
+    		trackerThread.stopTracking();
+    	} else {
+    		trackingIsOn = true;
+        	
+    		startStopButton.setText("Stop tracking");
+        	trackerThread = new TrackerThread();
+        	trackerThread.startTracking();
+    	}
     }
     
     /**
@@ -78,14 +97,13 @@ public class MainActivity extends Activity {
     	} else {
 	    	Intent intent = new Intent(this, PointsInMapActivity.class);
 	    	
-
-    		GeoTag data[] = new GeoTag[] {
-    				new GeoTag("asdf", "1"),
-    				new GeoTag("assdfsdfsdf", "2"),
-    				new GeoTag("asasddf", "3"),
-    				new GeoTag("das", "4"),
-    				new GeoTag("aasdsdf", "5") };
-    		Parcelable[] output = CommonUtil.parseGeoTagArrayToParcelableArray(data);
+//    		GeoTag data[] = new GeoTag[] {
+//    				new GeoTag("asdf", "1"),
+//    				new GeoTag("assdfsdfsdf", "2"),
+//    				new GeoTag("asasddf", "3"),
+//    				new GeoTag("das", "4"),
+//    				new GeoTag("aasdsdf", "5") };
+    		Parcelable[] output = CommonUtil.parseGeoTagArrayToParcelableArray(tags.toArray(new GeoTag[0]));
     		
     		intent.putExtra("data", output);
 	    	startActivityForResult(intent, 0); //FIXME: mit� tulee requestCodeksi?
@@ -102,13 +120,13 @@ public class MainActivity extends Activity {
     	} else {
         	Intent intent = new Intent(this, ListActivity.class);
 
-    		GeoTag data[] = new GeoTag[] {
-    				new GeoTag("asdf", "1"),
-    				new GeoTag("assdfsdfsdf", "2"),
-    				new GeoTag("asasddf", "3"),
-    				new GeoTag("das", "4"),
-    				new GeoTag("aasdsdf", "5") };
-    		Parcelable[] output = CommonUtil.parseGeoTagArrayToParcelableArray(data);
+//    		GeoTag data[] = new GeoTag[] {
+//    				new GeoTag("asdf", "1"),
+//    				new GeoTag("assdfsdfsdf", "2"),
+//    				new GeoTag("asasddf", "3"),
+//    				new GeoTag("das", "4"),
+//    				new GeoTag("aasdsdf", "5") };
+    		Parcelable[] output = CommonUtil.parseGeoTagArrayToParcelableArray(tags.toArray(new GeoTag[0]));
     		
     		intent.putExtra("data", output);
             startActivityForResult(intent, 0); //FIXME: mit� tulee requestCodeksi?
@@ -153,4 +171,43 @@ public class MainActivity extends Activity {
 	public void setTags(List<GeoTag> tags) {
 		this.tags = tags;
 	}
+	
+    private class TrackerThread extends Thread {
+    	private volatile Thread trackerThread;
+    	private List<GeoTag> tags;
+    	
+    	public void run() {
+            Thread thisThread = Thread.currentThread();
+            while (true) {
+                try {
+                	LocationSelectionAsyncTask geoTagGetter = new LocationSelectionAsyncTask(
+                			getApplicationContext(), 
+                			true, 
+                			true, 
+                			true);
+                	try {
+						tags.add(geoTagGetter.execute().get()); //Crashaa koko roskan
+					} catch (ExecutionException e) {
+						Log.e(TAG, e.getMessage());
+					}
+                    thisThread.sleep(60000 * 3);
+                } catch (InterruptedException e){
+                	return;
+                }
+            }
+        }
+    	
+    	public void startTracking() {
+    		tags = new ArrayList<GeoTag>();
+            trackerThread = new Thread(this);
+            trackerThread.start();
+        }
+
+        public void stopTracking() {
+            Thread tmpThread = trackerThread;
+            trackerThread = null;
+            tmpThread.interrupt();
+        }
+    }
+	
 }

@@ -3,6 +3,13 @@ package fi.jyu.ties425.geotrack.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * A basic class for wrapping data of a single geo tag including the time and the location
+ * Implements parcelable for easy transfer between activities
+ * 
+ * @author Ari-Matti Nivasalo, Kim Foudila
+ *
+ */
 public class GeoTag implements Parcelable {
 	private String geoTag;
 	private String timeObtained;

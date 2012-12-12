@@ -12,6 +12,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * GeoTagAdapter used in the list activity for inner layout usage.
+ * 
+ * @author Ari-Matti Nivasalo
+ */
 public class GeoTagAdapter extends ArrayAdapter<GeoTag>{
 
     Context context; 
@@ -28,14 +33,14 @@ public class GeoTagAdapter extends ArrayAdapter<GeoTag>{
 	@Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
-        WeatherHolder holder = null;
+        GeoTagHolder holder = null;
         
         if(row == null)
         {
             LayoutInflater inflater = ((Activity)context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
             
-            holder = new WeatherHolder();
+            holder = new GeoTagHolder();
 //            holder.imgIcon = (ImageView)row.findViewById(R.id.imgIcon);
             holder.tagLocation = (TextView)row.findViewById(R.id.tagLocation);
             holder.tagTime = (TextView)row.findViewById(R.id.tagTime);
@@ -44,7 +49,7 @@ public class GeoTagAdapter extends ArrayAdapter<GeoTag>{
         }
         else
         {
-            holder = (WeatherHolder)row.getTag();
+            holder = (GeoTagHolder)row.getTag();
         }
         
         GeoTag tag = data[position];
@@ -56,7 +61,7 @@ public class GeoTagAdapter extends ArrayAdapter<GeoTag>{
         return row;
     }
     
-    static class WeatherHolder
+    static class GeoTagHolder
     {
 //        ImageView imgIcon;
         TextView tagLocation;

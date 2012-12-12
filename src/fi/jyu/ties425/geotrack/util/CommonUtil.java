@@ -8,8 +8,19 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Common util class for miscelancelous stuff
+ * 
+ * @author Ari-Matti Nivasalo, Kim Foudila
+ *
+ */
 public class CommonUtil {
 
+	/**
+	 * Parces an array of GeoTags in Parcelable format back to GeoTag array
+	 * @param tmpData
+	 * @return
+	 */
 	public static GeoTag[] parseParcelableArrayToGeoTagArray(Parcelable[] tmpData) {
 		GeoTag[] data = new GeoTag[tmpData.length];
 		for (int j=data.length-1; j>=0; --j) {
@@ -18,6 +29,11 @@ public class CommonUtil {
 		return data;
 	}
 
+	/**
+	 * Parces an array of GeoTags to array of Parcelables
+	 * @param data
+	 * @return
+	 */
 	public static Parcelable[] parseGeoTagArrayToParcelableArray(GeoTag[] data) {
 		Parcelable[] output = new Parcelable[data.length];
 		for (int j=data.length-1; j>=0; --j) {
@@ -26,6 +42,11 @@ public class CommonUtil {
 		return output;
 	}
 
+	/**
+	 * 
+	 * @param addresses
+	 * @return
+	 */
 	public static String getLocationFromAddressLines(List<Address> addresses) {
 		if (addresses == null || addresses.size() > 0) {
 			return null;

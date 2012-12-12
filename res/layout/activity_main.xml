@@ -21,7 +21,8 @@
         android:layout_below="@+id/textView1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="29dp"
-        android:text="@string/start_button_displaytext" />
+        android:text="@string/start_button_displaytext" 
+        android:onClick="startOrStopTracking" />
 
     <Button
         android:id="@+id/button2"

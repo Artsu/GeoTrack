@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * @author Kim Foudila
+ * @author Kim Foudila, Ari-Matti Nivasalo
  */
 public class LocationSelectionAsyncTask extends AsyncTask<Void, Void, GeoTag> {
 
@@ -65,7 +65,9 @@ public class LocationSelectionAsyncTask extends AsyncTask<Void, Void, GeoTag> {
 				} catch (IOException e) {
 					Log.e(TAG, "Error getting addresses by location", e);
 				}
-				geoTag.setGeoTag(CommonUtil.getLocationFromAddressLines(addresses));
+				
+				geoTag.setGeoTag(latitude + "-" + longitude);
+//				geoTag.setGeoTag(CommonUtil.getLocationFromAddressLines(addresses));
 				geoTag.setLat(latitude);
 				geoTag.setLon(longitude);
 
@@ -78,7 +80,6 @@ public class LocationSelectionAsyncTask extends AsyncTask<Void, Void, GeoTag> {
 		Handler handler = new Handler();
 		handler.post(new Runnable() {
 
-			@Override
 			public void run() {
 				myLocation.getLocation(context, locationResult, 20000, useGps, useNetwork, preferGps);
 			}

@@ -19,7 +19,7 @@ import com.example.geotrack.R;
  * >Stackoverflow.com</a>.
  * </p>
  *
- * @author Kim Foudila
+ * @author Kim Foudila, Ari-Matti Nivasalo
  */
 public class MyLocation {
 	private static final String TAG = "MyLocation";
