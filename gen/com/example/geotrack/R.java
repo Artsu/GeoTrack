@@ -44,6 +44,7 @@ public final class R {
         public static final int map_activity_name=0x7f040001;
         public static final int map_button_displaytext=0x7f04000b;
         public static final int menu_settings=0x7f040004;
+        public static final int no_location_providers_enabled=0x7f04000c;
         public static final int show_infotext=0x7f040006;
         public static final int start_button_displaytext=0x7f040008;
         public static final int stop_button_displaytext=0x7f040009;

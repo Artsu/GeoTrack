@@ -6,8 +6,10 @@ import android.os.Parcelable;
 public class GeoTag implements Parcelable {
 	private String geoTag;
 	private String timeObtained;
+	private double lat;
+	private double lon;
 	
-	public GeoTag() {;}
+	public GeoTag() {}
 	/**
 	 *
 	 * Constructor to use when re-constructing object
@@ -31,7 +33,23 @@ public class GeoTag implements Parcelable {
 	public void setTimeObtained(String timeObtained) {
 		this.timeObtained = timeObtained;
 	}
-	
+
+	public double getLat() {
+		return lat;
+	}
+
+	public void setLat(double lat) {
+		this.lat = lat;
+	}
+
+	public double getLon() {
+		return lon;
+	}
+
+	public void setLon(double lon) {
+		this.lon = lon;
+	}
+
 	public GeoTag(String geoTag, String time) {
 		this.geoTag = geoTag;
 		this.timeObtained = time;
@@ -40,6 +58,8 @@ public class GeoTag implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(geoTag);
 		dest.writeString(timeObtained);
+		dest.writeDouble(lat);
+		dest.writeDouble(lon);
 	}
 	private void readFromParcel(Parcel in) {
 
@@ -48,6 +68,8 @@ public class GeoTag implements Parcelable {
 		// written to the parcel
 		geoTag = in.readString();
 		timeObtained = in.readString();
+		lat = in.readDouble();
+		lon = in.readDouble();
 	}
 	
 	public int describeContents() {

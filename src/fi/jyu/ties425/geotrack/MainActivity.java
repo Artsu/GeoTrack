@@ -81,7 +81,7 @@ public class MainActivity extends Activity {
     		Parcelable[] output = CommonUtil.parseGeoTagArrayToParcelableArray(data);
     		
     		intent.putExtra("data", output);
-	    	startActivityForResult(intent, 0); //FIXME: mitä tulee requestCodeksi?
+	    	startActivityForResult(intent, 0); //FIXME: mitï¿½ tulee requestCodeksi?
     	}
     }
     
@@ -104,7 +104,7 @@ public class MainActivity extends Activity {
     		Parcelable[] output = CommonUtil.parseGeoTagArrayToParcelableArray(data);
     		
     		intent.putExtra("data", output);
-            startActivityForResult(intent, 0); //FIXME: mitä tulee requestCodeksi?
+            startActivityForResult(intent, 0); //FIXME: mitï¿½ tulee requestCodeksi?
     	}
 
     }

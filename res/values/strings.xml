@@ -21,4 +21,5 @@
     
     <string name="list_button_displaytext">Show taglist</string>
     <string name="map_button_displaytext">Show map</string>
+    <string name="no_location_providers_enabled">No location providers enabled</string>
 </resources>

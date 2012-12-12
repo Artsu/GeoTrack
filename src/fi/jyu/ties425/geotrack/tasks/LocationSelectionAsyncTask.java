@@ -2,20 +2,27 @@ package fi.jyu.ties425.geotrack.tasks;
 
 
 import android.content.Context;
-import android.location.Location;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import fi.jyu.ties425.geotrack.model.GeoTag;
+import fi.jyu.ties425.geotrack.util.CommonUtil;
 import fi.jyu.ties425.geotrack.util.MyLocation;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Kim Foudila
  */
-public class LocationSelectionAsyncTask extends AsyncTask<Void, Void, Location> {
+public class LocationSelectionAsyncTask extends AsyncTask<Void, Void, GeoTag> {
 
 	protected static final String TAG = LocationSelectionAsyncTask.class.getSimpleName();
-	Location loc = null;
+	GeoTag geoTag = null;
 	private boolean useGps;
 	private boolean useNetwork;
 	private boolean preferGps;
@@ -33,7 +40,7 @@ public class LocationSelectionAsyncTask extends AsyncTask<Void, Void, Location> 
 	}
 
 	@Override
-	protected Location doInBackground(Void... voids) {
+	protected GeoTag doInBackground(Void... voids) {
 		Looper.prepare();
 		final Looper myLooper = Looper.myLooper();
 		// Callback class
@@ -51,8 +58,16 @@ public class LocationSelectionAsyncTask extends AsyncTask<Void, Void, Location> 
 				double longitude = location.getLongitude();
 				Log.d(TAG, "latitude: " + latitude + ", longitude: " + longitude);
 
-				loc.setLatitude(latitude);
-				loc.setLongitude(longitude);
+				Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
+				List<Address> addresses = null;
+				try {
+					addresses = geoCoder.getFromLocation(latitude, longitude, 1);
+				} catch (IOException e) {
+					Log.e(TAG, "Error getting addresses by location", e);
+				}
+				geoTag.setGeoTag(CommonUtil.getLocationFromAddressLines(addresses));
+				geoTag.setLat(latitude);
+				geoTag.setLon(longitude);
 
 				if (myLooper != null) {
 					myLooper.quit();
@@ -71,7 +86,12 @@ public class LocationSelectionAsyncTask extends AsyncTask<Void, Void, Location> 
 		Log.d(TAG, "Start fetching location.");
 		Looper.loop();
 		Log.d(TAG, "Finished fetching location.");
-		return loc;
+		return geoTag;
 	}
 
+	@Override
+	protected void onPostExecute(GeoTag result) {
+		// TODO whatever we want to do with the geotag
+		// we can also make this AsyncTask an inner class in the calling activity
+	}
 }
