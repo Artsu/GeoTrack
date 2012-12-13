@@ -1,28 +1,36 @@
 package fi.jyu.ties425.geotrack;
 
-import java.lang.reflect.Array;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import com.example.geotrack.R;
-
-import fi.jyu.ties425.geotrack.model.GeoTag;
-import fi.jyu.ties425.geotrack.tasks.LocationSelectionAsyncTask;
-import fi.jyu.ties425.geotrack.util.CommonUtil;
-
-import android.os.Bundle;
-import android.os.Parcelable;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
+
+import com.example.geotrack.R;
+
+import fi.jyu.ties425.geotrack.model.GeoTag;
+import fi.jyu.ties425.geotrack.util.CommonUtil;
+import fi.jyu.ties425.geotrack.util.MyLocation;
 
 /**
  * The main activity for GeoTrack app. 
@@ -38,10 +46,12 @@ public class MainActivity extends Activity {
 	
 	private List<GeoTag> tags = new ArrayList<GeoTag>();
 	
-	private TrackerThread trackerThread;
-	
 	private Button startStopButton;
 	private ImageButton infoImageButton;
+
+	public long lastSearched = System.currentTimeMillis();
+
+	private Timer timer;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,15 +60,6 @@ public class MainActivity extends Activity {
         
         final Button button = (Button) findViewById(R.id.startStopButton);
         this.startStopButton = button;
-//        
-//        final ImageButton imageButton = (ImageButton) findViewById(R.id.infoImageButton);
-//        this.infoImageButton = imageButton;
-        
-//        infoImageButton.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//            	
-//            }
-//        });
     }
 
     @Override
@@ -68,24 +69,28 @@ public class MainActivity extends Activity {
     }
     
     /**
-     * Starts or stops the tracking depending on whether the tracking is on
+     * Starts or stops the tracking depending on whether the tracking is on.
      * 
      * @param view
      */
     public void startOrStopTracking(View view) {
     	if (trackingIsOn) {
     		trackingIsOn = false;
-    		
     		startStopButton.setText("Start tracking");
-    		trackerThread.stopTracking();
-    	} else {
-    		trackingIsOn = true;
-        	
-    		startStopButton.setText("Stop tracking");
-        	trackerThread = new TrackerThread();
-        	trackerThread.startTracking();
-    	}
-    }
+			timer.cancel();
+		} else {
+			trackingIsOn = true;
+			startStopButton.setText("Stop tracking");
+			timer = new Timer();
+			// tries to get a new GeoTag every 60 seconds.
+			timer.schedule(new TimerTask() {
+				public void run() {
+					new LocationSelectionAsyncTask(getApplicationContext(),
+							true, true, true).execute((Void[]) null);
+				}
+			}, 0, 60 * 1000);
+		}
+	}
     
     /**
      * Opens map activity view
@@ -96,17 +101,10 @@ public class MainActivity extends Activity {
     		showDialog("Stop the tracking first to view your route.");
     	} else {
 	    	Intent intent = new Intent(this, PointsInMapActivity.class);
-	    	
-//    		GeoTag data[] = new GeoTag[] {
-//    				new GeoTag("asdf", "1"),
-//    				new GeoTag("assdfsdfsdf", "2"),
-//    				new GeoTag("asasddf", "3"),
-//    				new GeoTag("das", "4"),
-//    				new GeoTag("aasdsdf", "5") };
+	    	// parse tags into an Parcelable[] so that they can be given in the intent's extra
     		Parcelable[] output = CommonUtil.parseGeoTagArrayToParcelableArray(tags.toArray(new GeoTag[0]));
-    		
     		intent.putExtra("data", output);
-	    	startActivityForResult(intent, 0); //FIXME: mit� tulee requestCodeksi?
+	    	startActivityForResult(intent, 0);
     	}
     }
     
@@ -119,17 +117,10 @@ public class MainActivity extends Activity {
     		showDialog("Stop the tracking first to view your route.");
     	} else {
         	Intent intent = new Intent(this, ListActivity.class);
-
-//    		GeoTag data[] = new GeoTag[] {
-//    				new GeoTag("asdf", "1"),
-//    				new GeoTag("assdfsdfsdf", "2"),
-//    				new GeoTag("asasddf", "3"),
-//    				new GeoTag("das", "4"),
-//    				new GeoTag("aasdsdf", "5") };
-    		Parcelable[] output = CommonUtil.parseGeoTagArrayToParcelableArray(tags.toArray(new GeoTag[0]));
-    		
+	    	// parse tags into an Parcelable[] so that they can be given in the intent's extra
+        	Parcelable[] output = CommonUtil.parseGeoTagArrayToParcelableArray(tags.toArray(new GeoTag[0]));
     		intent.putExtra("data", output);
-            startActivityForResult(intent, 0); //FIXME: mit� tulee requestCodeksi?
+            startActivityForResult(intent, 0);
     	}
 
     }
@@ -170,44 +161,94 @@ public class MainActivity extends Activity {
 
 	public void setTags(List<GeoTag> tags) {
 		this.tags = tags;
-	}
-	
-    private class TrackerThread extends Thread {
-    	private volatile Thread trackerThread;
-    	private List<GeoTag> tags;
-    	
-    	public void run() {
-            Thread thisThread = Thread.currentThread();
-            while (true) {
-                try {
-                	LocationSelectionAsyncTask geoTagGetter = new LocationSelectionAsyncTask(
-                			getApplicationContext(), 
-                			true, 
-                			true, 
-                			true);
-                	try {
-						tags.add(geoTagGetter.execute().get()); //Crashaa koko roskan
-					} catch (ExecutionException e) {
-						Log.e(TAG, e.getMessage());
-					}
-                    thisThread.sleep(60000 * 3);
-                } catch (InterruptedException e){
-                	return;
-                }
-            }
-        }
-    	
-    	public void startTracking() {
-    		tags = new ArrayList<GeoTag>();
-            trackerThread = new Thread(this);
-            trackerThread.start();
-        }
+	}	
 
-        public void stopTracking() {
-            Thread tmpThread = trackerThread;
-            trackerThread = null;
-            tmpThread.interrupt();
-        }
+	/**
+	 * An asynchronous task making use of Android's AsyncTask class.
+	 * Executes a background task which tries to fetch the location.
+	 * Adds the result location into the list.
+	 * @author kimf
+	 *
+	 */
+    private class LocationSelectionAsyncTask extends AsyncTask<Void, Void, GeoTag> {
+
+    	protected final String TAG = LocationSelectionAsyncTask.class.getSimpleName();
+    	GeoTag geoTag = null;
+    	private boolean useGps;
+    	private boolean useNetwork;
+    	private boolean preferGps;
+    	private Context context;
+
+    	public LocationSelectionAsyncTask(Context context, boolean useGps, boolean useNetwork, boolean preferGps) {
+    		this.context = context;
+    		this.useGps = useGps;
+    		this.useNetwork = useNetwork;
+    		this.preferGps = preferGps;
+    	}
+
+    	@Override
+    	protected GeoTag doInBackground(Void... voids) {
+    		Looper.prepare();
+    		final Looper myLooper = Looper.myLooper();
+    		// Callback class
+    		final MyLocation.LocationResult locationResult = new MyLocation.LocationResult() {
+
+    			@Override
+    			public void gotLocation(android.location.Location location) {
+    				if (location == null) {
+    					if (myLooper != null) {
+    						myLooper.quit();
+    					}
+    					return;
+    				}
+    				double latitude = location.getLatitude();
+    				double longitude = location.getLongitude();
+    				Log.d(TAG, "latitude: " + latitude + ", longitude: " + longitude);
+
+    				// fetches an address for the given coordinates
+					Geocoder geoCoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+					List<Address> addresses = null;
+					try {
+						addresses = geoCoder.getFromLocation(latitude, longitude, 1);
+					} catch (IOException e) {
+						Log.e(TAG, "Error getting addresses by location", e);
+					}
+					geoTag = new GeoTag();
+					geoTag.setGeoTag(latitude + "-" + longitude);
+					geoTag.setDescr(CommonUtil.getLocationFromAddressLines(addresses));
+					geoTag.setLat(latitude);
+    				geoTag.setLon(longitude);
+
+    				if (myLooper != null) {
+    					myLooper.quit();
+    				}
+    			}
+    		};
+    		final MyLocation myLocation = new MyLocation();
+    		Handler handler = new Handler();
+    		handler.post(new Runnable() {
+
+    			public void run() {
+    				myLocation.getLocation(context, locationResult, 20000, useGps, useNetwork, preferGps);
+    			}
+    		});
+    		Log.d(TAG, "Start fetching location.");
+    		Looper.loop();
+    		Log.d(TAG, "Finished fetching location.");
+    		return geoTag;
+    	}
+
+    	@Override
+    	protected void onPostExecute(GeoTag result) {
+			if (result != null) {
+				lastSearched = System.currentTimeMillis();
+				tags.add(result);
+				Toast.makeText(context, "Obtained a new geo tag: " + result.getDescr(), Toast.LENGTH_LONG).show();
+			}
+    		Log.d(TAG, "tags content: " + tags);
+    	}
     }
 	
 }
+
+

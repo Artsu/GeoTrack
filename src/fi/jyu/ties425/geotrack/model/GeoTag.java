@@ -12,6 +12,7 @@ import android.os.Parcelable;
  */
 public class GeoTag implements Parcelable {
 	private String geoTag;
+	private String descr;
 	private String timeObtained;
 	private double lat;
 	private double lon;
@@ -56,6 +57,14 @@ public class GeoTag implements Parcelable {
 	public void setLon(double lon) {
 		this.lon = lon;
 	}
+	
+	public String getDescr() {
+		return descr;
+	}
+	
+	public void setDescr(String descr) {
+		this.descr = descr;
+	}
 
 	public GeoTag(String geoTag, String time) {
 		this.geoTag = geoTag;
@@ -64,16 +73,17 @@ public class GeoTag implements Parcelable {
 
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(geoTag);
+		dest.writeString(descr);
 		dest.writeString(timeObtained);
 		dest.writeDouble(lat);
 		dest.writeDouble(lon);
 	}
 	private void readFromParcel(Parcel in) {
-
 		// We just need to read back each
 		// field in the order that it was
 		// written to the parcel
 		geoTag = in.readString();
+		descr = in.readString();
 		timeObtained = in.readString();
 		lat = in.readDouble();
 		lon = in.readDouble();

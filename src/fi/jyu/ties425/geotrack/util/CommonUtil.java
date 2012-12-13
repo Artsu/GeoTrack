@@ -48,7 +48,7 @@ public class CommonUtil {
 	 * @return
 	 */
 	public static String getLocationFromAddressLines(List<Address> addresses) {
-		if (addresses == null || addresses.size() > 0) {
+		if (addresses == null || addresses.size() == 0) {
 			return null;
 		}
 		StringBuilder sb = new StringBuilder();
